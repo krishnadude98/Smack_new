@@ -1,9 +1,11 @@
-package com.hari.smack
+package com.hari.smack.Controller
 
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.hari.smack.R
+import com.hari.smack.Services.AuthService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import kotlin.random.Random
 
@@ -40,10 +42,16 @@ class CreateUserActivity : AppCompatActivity() {
         val savedg= g.toDouble()/255
         val savedb=b.toDouble()/255
         avatarColor= "[$savedR,$savedg,$savedb,1]"
-        
+
 
     }
     fun createUserBtnClicked(view: View){
+        AuthService.registerUser(this,"hk@kj","kk"){complete->
+            if(complete){
+
+            }
+
+        }
 
 
     }

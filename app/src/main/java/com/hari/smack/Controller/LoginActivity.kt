@@ -1,9 +1,10 @@
-package com.hari.smack
+package com.hari.smack.Controller
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.hari.smack.R
 
 class LoginActivity : AppCompatActivity() {
 
@@ -15,7 +16,8 @@ class LoginActivity : AppCompatActivity() {
 
     }
     fun loginCreateUserBtnClicked(view: View){
-        val createUserIntent= Intent(this,CreateUserActivity::class.java)
+        val createUserIntent= Intent(this,
+            CreateUserActivity::class.java)
         startActivity(createUserIntent)
 
     }
