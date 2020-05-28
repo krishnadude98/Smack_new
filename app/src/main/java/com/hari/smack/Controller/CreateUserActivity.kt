@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.hari.smack.R
 import com.hari.smack.Services.AuthService
+import com.hari.smack.Services.UserDataService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import kotlin.random.Random
 
@@ -46,14 +47,25 @@ class CreateUserActivity : AppCompatActivity() {
 
     }
     fun createUserBtnClicked(view: View){
+        val userName= createUserNameText.text.toString()
         val email= createEmailText.text.toString()
         val password= createPasswordText.text.toString()
+
         AuthService.registerUser(this,email,password){registerSucess->
             if(registerSucess){
                 AuthService.LoginUser(this,email,password){loginSucess->
                     if(loginSucess){
-                        println(AuthService.authToken)
-                        println(AuthService.userEmail)
+                        AuthService.createUser(this,userName,email,userAvatar,avatarColor){createSuccess->
+                            if(createSuccess){
+                                println(UserDataService.avatarName)
+                                println(UserDataService.avatarColor)
+                                println(UserDataService.name)
+                                finish()
+
+
+                            }
+
+                        }
                     }
 
                 }
