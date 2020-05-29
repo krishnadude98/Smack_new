@@ -1,12 +1,16 @@
 package com.hari.smack.Controller
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.hari.smack.R
 import com.hari.smack.Services.AuthService
 import com.hari.smack.Services.UserDataService
+import com.hari.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import kotlinx.android.synthetic.main.activity_create_user.*
 import kotlin.random.Random
 
@@ -50,29 +54,52 @@ class CreateUserActivity : AppCompatActivity() {
         val userName= createUserNameText.text.toString()
         val email= createEmailText.text.toString()
         val password= createPasswordText.text.toString()
+        if (userName.isNotEmpty()&& email.isNotEmpty()&&password.isNotEmpty()){
+            AuthService.registerUser(this,email,password){registerSucess->
 
-        AuthService.registerUser(this,email,password){registerSucess->
-            if(registerSucess){
-                AuthService.LoginUser(this,email,password){loginSucess->
-                    if(loginSucess){
-                        AuthService.createUser(this,userName,email,userAvatar,avatarColor){createSuccess->
-                            if(createSuccess){
-                                println(UserDataService.avatarName)
-                                println(UserDataService.avatarColor)
-                                println(UserDataService.name)
-                                finish()
+                if(registerSucess){
+                    AuthService.LoginUser(this,email,password){loginSucess->
+                        if(loginSucess){
+                            AuthService.createUser(this,userName,email,userAvatar,avatarColor){createSuccess->
+                                if(createSuccess){
+                                    val UserDatatChange= Intent(BROADCAST_USER_DATA_CHANGE)
+                                    LocalBroadcastManager.getInstance(this).sendBroadcast(UserDatatChange)
+                                    enableSpinner(false)
+                                    finish()
 
+
+                                }else errorToast()
 
                             }
+                        }else errorToast()
 
-                        }
                     }
+                }else errorToast()
 
-                }
             }
+        }
+        else{
+            Toast.makeText(this,"Make Sure Every thing is filled!!",Toast.LENGTH_LONG).show()
+            enableSpinner(false)
 
         }
 
 
+
+    }
+    fun errorToast(){
+        Toast.makeText(this,"Something went wrong try again later!!",Toast.LENGTH_LONG).show()
+        enableSpinner(false)
+    }
+    fun enableSpinner(enable:Boolean){
+        if(enable){
+            spinnerProgress.setBackgroundColor(Color.BLUE)
+        }
+        else{
+            spinnerProgress.setBackgroundColor(Color.TRANSPARENT)
+        }
+        createUserBtn.isEnabled=!enable
+        createAvatarImageView.isEnabled= !enable
+        backgroundColorBtn.isEnabled= !enable
     }
 }
